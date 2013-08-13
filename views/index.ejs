@@ -1,0 +1,36 @@
+<% if (!user) { %>
+	<h2>Welcome! Please log in.</h2>
+<% } else { %>
+	<h2>Hello, <%= user.displayName %>.</h2>
+
+  <h2>Broodje bestellen</h2>
+
+  <form id="order" method="POST">
+    <label for="beleg">Beleg / naam broodje:</label><input type="text" name="beleg" id="beleg"/>
+    <fieldSet>
+      <legend>Soort brood</legend>
+        <div>
+          <input type="radio" checked="true" name="soort" value="bruin" id="soort_bruin"/>
+          <label for="soort_bruin">Bruin</label>
+        </div>
+        <div>
+          <input type="radio" name="soort" value="wit" id="soort_wit"/>
+          <label for="soort_wit">Wit</label>
+        </div>
+        <div>
+          <input type="radio" name="soort" value="ander" id="soort_ander"/>
+          <label for="soort_ander">Ander</label>:
+          <input type="text" name="soort_ander" placeholder="ciabatta" id="soort_ander"/>
+        </div>
+      </legend>
+    </fieldSet>
+
+    <label for="beleg">Opmerkingen:</label><textarea name="opmerkingen" id="opmerkingen"></textarea>
+    <input type="submit" value="Versturen"></input>
+  </form>
+  
+  <h2>Broodjes halen</h2>
+
+
+<% } %>
+  

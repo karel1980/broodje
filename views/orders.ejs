@@ -1,0 +1,37 @@
+
+  <h2>Vandaag besteld</h2>
+
+  <% if (run) { %>
+    <div>Iemand gaat halen</div>
+  <% } else { %>
+    <h2>Niemand gaat halen.</h2>
+    <% if (user) { %>
+      <form action="/halen" method="POST">
+        <input type="submit" value="Ik ga halen"></input>
+      </form>
+    <% } else { %>
+      <div>Log in om te gaan halen</div>
+    <% } %>
+  <% } %>
+
+  <table>
+    <tr>
+      <th>Wie</th>
+      <th>Beleg</th>
+      <th>Brood</th>
+      <th>Opmerkingen</th>
+      <th>Besteld op</th>
+    </tr>
+
+    <% for (o in orders) { %>
+    <tr>
+      <td><%=orders[o].owner ? orders[o].owner.display_name || "???" : "???"%></td>
+      <td><%=orders[o].beleg || ""%></td>
+      <td><%=orders[o].soort || ""%></td>
+      <td><%=orders[o].opmerkingen || ""%></td>
+      <td><%=orders[o].besteld_op || ""%></td>
+    </tr>
+    <% } %>
+
+  </table>
+  

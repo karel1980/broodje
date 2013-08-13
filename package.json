@@ -1,0 +1,12 @@
+{
+  "name": "ngdata-broodje",
+  "version": "0.0.0",
+  "dependencies": {
+    "express": "<= 2.5.11",
+    "ejs": ">= 0.0.0",
+    "passport": ">= 0.0.0",
+    "passport-google": ">= 0.0.0",
+    "orm": ">= 0.0.0",
+    "mysql": ">= 0.0.0"
+  }
+}
