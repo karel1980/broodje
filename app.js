@@ -67,6 +67,7 @@ app.configure(function() {
     define: function(db,models) {
       models.user = db.define("user", {
           display_name: String,
+          identifier: String,
         }, {
           id: "id"
         }
@@ -93,21 +94,20 @@ app.configure(function() {
   app.use(app.router);
 });
 
-
 app.get('/', function(req, res){
   res.render('index', { user: req.user });
 });
 
 app.get('/vandaag', function(req, res) {
   var now = new Date();
-  var today = "" + now.getFullYear() + "-" + (1+now.getMonth()) + "-" + now.getDate();
+  var today = today_str();
   //TODO :what about last month of year, last day of month? will it roll over automatically?
   var tomorrow = "" + now.getFullYear() + "-" + (1+now.getMonth()) + "-" + (now.getDate()+1);
   req.models.bestel.find({besteld_op:orm.between(today,tomorrow)}, function(err, orders) {
     if (err) {
       console.log(err);
     }
-    req.models.run.find({run_on: new Date()}, function(err, runs) {
+    req.models.run.find({run_on: today}, function(err, runs) {
       var run;
       if (runs.length > 0) {
         run = runs[0];
@@ -127,7 +127,6 @@ app.post('/', function(req, res){
       console.log(err);
     }
 
-    console.log("YYY Saving order for user:", req.user);
     req.models.user.find({identifier: req.user.identifier}, function(err,users) {
       var user = users[0];
       var bestelling = {
@@ -138,7 +137,9 @@ app.post('/', function(req, res){
       };
       
       req.models.bestel.create([bestelling], function(err, b) {
-        console.log("ZZZ", err);
+        if (err) {
+          console.log(err);
+        }
         res.render('order-added', { user: req.user, order: bestelling });
       });
 
@@ -147,19 +148,20 @@ app.post('/', function(req, res){
 });
 
 app.post('/halen', function(req, res) {
-  console.log("PPP", req.user);
   req.models.user.find({identifier: req.user.identifier}, function(err, users) {
     if (err) {
       console.log(err);
     }
-    console.log("III", users);
     var user = users[0];
-    req.models.run.find({run_on: new Date()}, function(err, runs) {
-      console.log("RUNS", runs);
+    var today = today_str();
+    req.models.run.find({run_on: today}, function(err, runs) {
+      if (err) {
+        console.log(err);
+      }
       if (runs.length == 0) {
         req.models.run.create({runner_id: user.id, run_on: new Date()}, function(err, runs) {
           if (err) {
-            console.log("JJJ", err);
+            console.log(err);
           }
           res.render('run-ok', { user: req.user });
         });
@@ -169,6 +171,7 @@ app.post('/halen', function(req, res) {
         } else {
           req.models.user.find({identifier: req.user.identifier}, function(err,users) {
             runs[0].runner_id = users[0];
+            runs[0].save();
             res.render('run-ok', { user: req.user });
           });
         }
@@ -251,4 +254,9 @@ app.listen(3000);
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   res.redirect('/login')
+}
+
+function today_str() {
+  var now = new Date();
+  return "" + now.getFullYear() + "-" + (1+now.getMonth()) + "-" + now.getDate();
 }

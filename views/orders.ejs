@@ -2,7 +2,15 @@
   <h2>Vandaag besteld</h2>
 
   <% if (run) { %>
-    <div>Iemand gaat halen</div>
+    <div><%=run.runner.display_name%> gaat halen</div>
+    <% if (user) { %>
+      <% if (user.identifier != run.runner.identifier) { %>
+          <form action="/halen" method="POST">
+            <input type="hidden" name="force" value="true"/>
+            <input type="submit" value="Ik neem over"/>
+          </form>
+      <% } %>
+    <% } %>
   <% } else { %>
     <h2>Niemand gaat halen.</h2>
     <% if (user) { %>
