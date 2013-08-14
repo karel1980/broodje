@@ -1,9 +1,8 @@
-var express = require('express')
-  , passport = require('passport')
-  , util = require('util')
-  , orm = require('orm')
-  , GoogleStrategy = require('passport-google').Strategy;
-
+var express = require('express'),
+    passport = require('passport'),
+    util = require('util'),
+    orm = require('orm'),
+    GoogleStrategy = require('passport-google').Strategy;
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -90,7 +89,7 @@ app.configure(function() {
       );
       models.run.hasOne('runner', models.user, { autoFetch: true });
     }
-  }))
+  }));
   app.use(app.router);
 });
 
@@ -158,7 +157,7 @@ app.post('/halen', function(req, res) {
       if (err) {
         console.log(err);
       }
-      if (runs.length == 0) {
+      if (runs.length === 0) {
         req.models.run.create({runner_id: user.id, run_on: new Date()}, function(err, runs) {
           if (err) {
             console.log(err);
@@ -253,7 +252,7 @@ app.listen(3000);
 //   login page.
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+  res.redirect('/login');
 }
 
 function today_str() {
